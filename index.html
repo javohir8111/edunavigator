@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoBalance - Yashil Hayot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+         :root {
+            --primary: #2E8B57;
+            --primary-dark: #1F6B42;
+            --secondary: #4CAF50;
+            --light: #F5F9F6;
+            --dark: #2C3E50;
+            --warning: #FF9800;
+            --danger: #F44336;
+            --success: #4CAF50;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        /* Header */
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 15px;
+            box-shadow: 0 4px 12px rgba(46, 139, 87, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-icon {
+            font-size: 28px;
+        }
+        
+        .logo-text {
+            font-size: 22px;
+            font-weight: 700;
+        }
+        
+        .logo-subtext {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: white;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        /* Navigation */
+        
+        .nav-tabs {
+            display: flex;
+            background-color: white;
+            border-bottom: 2px solid #eaeaea;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px 10px;
+            font-weight: 600;
+            color: var(--dark);
+            text-decoration: none;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .tab i {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        /* Main Content */
+        
+        .container {
+            padding: 20px 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-bottom: 80px;
+        }
+        /* Welcome Card */
+        
+        .welcome-card {
+            background: linear-gradient(to right, #E8F5E9, #C8E6C9);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .welcome-title {
+            font-size: 22px;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+        }
+        
+        .welcome-text {
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .eco-score {
+            background-color: white;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        
+        .score-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        
+        .score-label {
+            color: #777;
+            font-size: 14px;
+        }
+        /* Modules */
+        
+        .section-title {
+            font-size: 20px;
+            margin: 25px 0 15px;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .module-card {
+            background-color: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 5px solid var(--primary);
+        }
+        
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .module-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .module-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background-color: #E8F5E9;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 15px;
+        }
+        
+        .module-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .module-desc {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 24px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: center;
+            text-decoration: none;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+        }
+        /* Camera Interface */
+        
+        .camera-interface {
+            background-color: #222;
+            border-radius: 12px;
+            padding: 10px;
+            margin-top: 15px;
+            text-align: center;
+        }
+        
+        .camera-preview {
+            width: 100%;
+            height: 250px;
+            background-color: #333;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .camera-icon {
+            font-size: 60px;
+            opacity: 0.7;
+        }
+        
+        .camera-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .camera-btn {
+            flex: 1;
+            background-color: white;
+            color: var(--dark);
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        /* Results */
+        
+        .result-card {
+            background-color: #E3F2FD;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .result-title {
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .plant-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .plant-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            background-color: #C8E6C9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--primary);
+            font-size: 40px;
+        }
+        
+        .plant-details h3 {
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+        
+        .plant-details p {
+            color: #666;
+            font-size: 14px;
+        }
+        /* Waste sorting */
+        
+        .waste-categories {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        
+        .waste-category {
+            min-width: 120px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .waste-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+        
+        .waste-name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .waste-desc {
+            font-size: 12px;
+            color: #777;
+        }
+        /* AR Demo */
+        
+        .ar-demo {
+            background-color: #333;
+            border-radius: 12px;
+            padding: 20px;
+            color: white;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .ar-view {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #222, #444);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .ar-object {
+            width: 100px;
+            height: 100px;
+            background-color: #4CAF50;
+            border-radius: 10px;
+            transform: rotate(45deg);
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0) rotate(45deg);
+            }
+            50% {
+                transform: translateY(-15px) rotate(45deg);
+            }
+        }
+        /* Bottom Navigation */
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #888;
+            text-decoration: none;
+            font-size: 12px;
+            transition: color 0.3s;
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+        }
+        
+        .nav-item i {
+            font-size: 22px;
+            margin-bottom: 4px;
+        }
+        /* Responsive */
+        
+        @media (max-width: 768px) {
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+            .logo-text {
+                font-size: 18px;
+            }
+            .welcome-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">🌿</div>
+                <div>
+                    <div class="logo-text">EcoBalance</div>
+                    <div class="logo-subtext">Yashil hayot platformasi</div>
+                </div>
+            </div>
+            <div class="user-avatar" id="userAvatar">AK</div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+        <a href="#" class="tab active" data-tab="home">
+            <i class="fas fa-home"></i> Bosh sahifa
+        </a>
+        <a href="#" class="tab" data-tab="plants">
+            <i class="fas fa-seedling"></i> O'simliklar
+        </a>
+        <a href="#" class="tab" data-tab="waste">
+            <i class="fas fa-recycle"></i> Chiqindilar
+        </a>
+        <a href="#" class="tab" data-tab="education">
+            <i class="fas fa-graduation-cap"></i> Ta'lim
+        </a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Home Tab Content -->
+        <div id="homeTab" class="tab-content active">
+            <div class="welcome-card">
+                <h2 class="welcome-title">Salom, Alisher!</h2>
+                <p class="welcome-text">Bugun siz atrof-muhitni himoya qilishda qo'shgan hissangiz: 3 ta plastik shishani qayta ishlash uchun ajratdingiz va 2 ta yangi daraxt ekdingiz.</p>
+
+                <div class="eco-score">
+                    <div>
+                        <div class="score-label">Sizning Ekologik Reytingingiz</div>
+                        <div class="score-value">8.5</div>
+                    </div>
+                    <div>
+                        <div class="score-label">O'zbekistonda o'rin</div>
+                        <div class="score-value">124</div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title">
+                <i class="fas fa-th-large"></i> Platforma Modullari
+            </h2>
+
+            <div class="modules-grid">
+                <!-- Plant Module -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <div class="module-title">O'simliklarni Aniqlash</div>
+                    </div>
+                    <p class="module-desc">Sun'iy intellekt yordamida har qanday o'simlikni kamera orqali aniqlang. Parvarish qilish bo'yicha maslahatlar oling.</p>
+                    <button class="btn" onclick="switchTab('plants')">
+                        <i class="fas fa-camera"></i> O'simlikni aniqlash
+                    </button>
+                </div>
+
+                <!-- Waste Module -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">
+                            <i class="fas fa-recycle"></i>
+                        </div>
+                        <div class="module-title">Chiqindilarni Saralash</div>
+                    </div>
+                    <p class="module-desc">Chiqindilarni to'g'ri saralashni o'rganing. AI yordamida chiqindilar turini aniqlang va ball to'plang.</p>
+                    <button class="btn btn-secondary" onclick="switchTab('waste')">
+                        <i class="fas fa-trash-alt"></i> Saralashni boshlash
+                    </button>
+                </div>
+
+                <!-- Education Module -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="module-title">AR/VR Ta'lim</div>
+                    </div>
+                    <p class="module-desc">Tabiiy fanlarni AR texnologiyalari yordamida interaktiv o'rganing. 3D modellar va virtual ekskursiyalar.</p>
+                    <button class="btn btn-warning" onclick="switchTab('education')">
+                        <i class="fas fa-vr-cardboard"></i> AR Demo ko'rish
+                    </button>
+                </div>
+
+                <!-- Dashboard Module -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="module-title">Ekologik Monitoring</div>
+                    </div>
+                    <p class="module-desc">Mahallangizning ekologik holatini kuzating. Havo sifati, yashil maydonlar va chiqindi statistikasi.</p>
+                    <button class="btn">
+                        <i class="fas fa-chart-bar"></i> Statistikani ko'rish
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Plants Tab Content -->
+        <div id="plantsTab" class="tab-content" style="display: none;">
+            <h2 class="section-title">
+                <i class="fas fa-seedling"></i> O'simliklarni Aniqlash
+            </h2>
+
+            <p>Kamerangizni o'simlikka qarating va AI uni aniqlab, parvarish qilish bo'yicha maslahat beradi.</p>
+
+            <div class="camera-interface">
+                <div class="camera-preview" id="cameraPreview">
+                    <i class="fas fa-camera camera-icon"></i>
+                    <div class="plant-placeholder">O'simlik suratini joylashtiring</div>
+                </div>
+
+                <div class="camera-controls">
+                    <button class="camera-btn" onclick="takePhoto()">
+                        <i class="fas fa-camera"></i> Suratga olish
+                    </button>
+                    <button class="camera-btn" onclick="uploadPhoto()">
+                        <i class="fas fa-upload"></i> Yuklash
+                    </button>
+                    <button class="camera-btn" onclick="demoPlant()">
+                        <i class="fas fa-magic"></i> Demo
+                    </button>
+                </div>
+            </div>
+
+            <div class="result-card" id="plantResult">
+                <div class="result-title">
+                    <i class="fas fa-check-circle"></i> O'simlik aniqlandi
+                </div>
+
+                <div class="plant-info">
+                    <div class="plant-image">
+                        <i class="fas fa-tree"></i>
+                    </div>
+                    <div class="plant-details">
+                        <h3 id="plantName">Chinor (Platanus orientalis)</h3>
+                        <p><strong>Yashash joyi:</strong> O'zbekiston, Markaziy Osiyo</p>
+                        <p><strong>CO2 yutilishi:</strong> 20-25 kg/yil</p>
+                        <p><strong>Parvarish:</strong> Ko'p suv talab qiladi, keng maydonlarda o'sadi</p>
+                    </div>
+                </div>
+
+                <div class="welcome-text">
+                    <strong>Maslahat:</strong> Bu daraxt havoni yaxshi tozalaydi va soyabon vazifasini o'taydi. Muntazam sug'orish va erta bahorda kesish tavsiya etiladi.
+                </div>
+
+                <button class="btn" style="margin-top: 15px;" onclick="addToMyGarden()">
+                    <i class="fas fa-plus"></i> Bog'imga qo'shish
+                </button>
+            </div>
+        </div>
+
+        <!-- Waste Tab Content -->
+        <div id="wasteTab" class="tab-content" style="display: none;">
+            <h2 class="section-title">
+                <i class="fas fa-recycle"></i> Chiqindilarni Saralash
+            </h2>
+
+            <p>Chiqindilarni to'g'ri saralash orqali atrof-muhitni himoya qiling va ball to'plang.</p>
+
+            <div class="camera-interface">
+                <div class="camera-preview">
+                    <i class="fas fa-trash camera-icon"></i>
+                    <div class="plant-placeholder">Chiqindilar suratini joylashtiring</div>
+                </div>
+
+                <div class="camera-controls">
+                    <button class="camera-btn" onclick="analyzeWaste()">
+                        <i class="fas fa-search"></i> Tahlil qilish
+                    </button>
+                    <button class="camera-btn" onclick="showWasteInfo()">
+                        <i class="fas fa-info-circle"></i> Qoidalar
+                    </button>
+                </div>
+            </div>
+
+            <div class="result-card" id="wasteResult">
+                <div class="result-title">
+                    <i class="fas fa-recycle"></i> Tahlil natijalari
+                </div>
+
+                <div class="welcome-text">
+                    Sizning chiqindilar tarkibi: <strong>3 ta plastik shisha, 2 ta metall banka, 1 kg qog'oz</strong>
+                </div>
+
+                <div class="welcome-text" style="margin-top: 10px;">
+                    <strong>To'g'ri saralash:</strong> Plastik va metall alohida, qog'oz alohida idishlarga tashalishi kerak.
+                </div>
+
+                <div class="welcome-text" style="margin: 15px 0; padding: 10px; background-color: #E8F5E9; border-radius: 8px;">
+                    <strong>Bugun to'plagan ballaringiz: <span style="color: var(--primary); font-size: 20px;">25</span></strong><br> Jami ballaringiz: <strong>450</strong>
+                </div>
+            </div>
+
+            <h2 class="section-title">
+                <i class="fas fa-list"></i> Chiqindilar Turlari
+            </h2>
+
+            <div class="waste-categories">
+                <div class="waste-category" style="border-left: 4px solid #4CAF50;">
+                    <div class="waste-icon">🗑️</div>
+                    <div class="waste-name">Organik</div>
+                    <div class="waste-desc">Oziq-ovqat chiqindilari</div>
+                </div>
+
+                <div class="waste-category" style="border-left: 4px solid #2196F3;">
+                    <div class="waste-icon">📄</div>
+                    <div class="waste-name">Qog'oz</div>
+                    <div class="waste-desc">Gazeta, quti, varaq</div>
+                </div>
+
+                <div class="waste-category" style="border-left: 4px solid #FF9800;">
+                    <div class="waste-icon">🥤</div>
+                    <div class="waste-name">Plastik</div>
+                    <div class="waste-desc">Shisha, idish, paket</div>
+                </div>
+
+                <div class="waste-category" style="border-left: 4px solid #9E9E9E;">
+                    <div class="waste-icon">🥫</div>
+                    <div class="waste-name">Metall</div>
+                    <div class="waste-desc">Banka, konserva</div>
+                </div>
+
+                <div class="waste-category" style="border-left: 4px solid #795548;">
+                    <div class="waste-icon">🍶</div>
+                    <div class="waste-name">Shisha</div>
+                    <div class="waste-desc">Idish, shisha</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Education Tab Content -->
+        <div id="educationTab" class="tab-content" style="display: none;">
+            <h2 class="section-title">
+                <i class="fas fa-graduation-cap"></i> AR/VR Ta'lim
+            </h2>
+
+            <p>Tabiiy fanlarni yangi usulda - Augmented Reality (AR) texnologiyalari yordamida o'rganing.</p>
+
+            <div class="ar-demo">
+                <h3 style="color: white; margin-bottom: 10px;">Fotosintez jarayoni - AR Demo</h3>
+                <p>Telefon kamerangizni ushbu kodga qarating va 3D modelni ko'ring</p>
+
+                <div class="ar-view">
+                    <div class="ar-object"></div>
+                </div>
+
+                <p>Yuqoridagi kvadratni telefon kamerangiz orqali ko'ring. Fotosintez jarayoni haqida 3D animatsiyani tomosha qiling.</p>
+
+                <button class="btn" onclick="startAR()" style="background-color: #4CAF50;">
+                    <i class="fas fa-vr-cardboard"></i> AR ni boshlash
+                </button>
+            </div>
+
+            <div class="modules-grid" style="margin-top: 25px;">
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">
+                            <i class="fas fa-atom"></i>
+                        </div>
+                        <div class="module-title">Kimyo laboratoriyasi</div>
+                    </div>
+                    <p class="module-desc">Xavfsiz virtual kimyo laboratoriyasi. Eksperimentlarni AR da bajaring.</p>
+                    <button class="btn">
+                        <i class="fas fa-flask"></i> Laboratoriyaga o'tish
+                    </button>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">
+                            <i class="fas fa-dna"></i>
+                        </div>
+                        <div class="module-title">Biologiya organlari</div>
+                    </div>
+                    <p class="module-desc">Inson organlarini 3D modelda o'rganing. Aylantiring, kattalashtiring.</p>
+                    <button class="btn">
+                        <i class="fas fa-heartbeat"></i> Organlarni ko'rish
+                    </button>
+                </div>
+            </div>
+
+            <div class="result-card" style="margin-top: 25px; background-color: #FFF3E0;">
+                <div class="result-title" style="color: #FF9800;">
+                    <i class="fas fa-chalkboard-teacher"></i> O'qituvchilar uchun
+                </div>
+                <p>Ushbu platforma O'zbekiston maktablari va OTMlar uchun maxsus ishlab chiqilgan. Darsliklarni AR ga aylantirish, interaktiv testlar yaratish imkoniyati.</p>
+                <button class="btn" style="background-color: #FF9800;">
+                    <i class="fas fa-school"></i> Maktab versiyasi
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active" onclick="switchTab('home')">
+            <i class="fas fa-home"></i> Bosh
+        </a>
+        <a href="#" class="nav-item" onclick="switchTab('plants')">
+            <i class="fas fa-camera"></i> Kamera
+        </a>
+        <a href="#" class="nav-item" onclick="switchTab('waste')">
+            <i class="fas fa-recycle"></i> Chiqindi
+        </a>
+        <a href="#" class="nav-item" onclick="switchTab('education')">
+            <i class="fas fa-vr-cardboard"></i> AR
+        </a>
+        <a href="#" class="nav-item" onclick="showProfile()">
+            <i class="fas fa-user"></i> Profil
+        </a>
+    </nav>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName + 'Tab').style.display = 'block';
+
+            // Activate selected tab
+            document.querySelectorAll('.tab').forEach(tab => {
+                if (tab.getAttribute('data-tab') === tabName) {
+                    tab.classList.add('active');
+                }
+            });
+
+            // Activate corresponding bottom nav item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                if (item.onclick && item.onclick.toString().includes(tabName)) {
+                    item.classList.add('active');
+                } else if (tabName === 'home') {
+                    document.querySelector('.nav-item:nth-child(1)').classList.add('active');
+                }
+            });
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Plant identification demo
+        function demoPlant() {
+            const plantNames = [
+                "Chinor (Platanus orientalis)",
+                "Terek (Populus alba)",
+                "Archazor (Juniperus)",
+                "Sassiqquyon (Ailanthus altissima)",
+                "Yong'oq daraxti (Juglans regia)"
+            ];
+
+            const randomPlant = plantNames[Math.floor(Math.random() * plantNames.length)];
+            document.getElementById("plantName").textContent = randomPlant;
+
+            // Show result card
+            document.getElementById("plantResult").style.display = 'block';
+
+            // Scroll to result
+            document.getElementById("plantResult").scrollIntoView({
+                behavior: 'smooth'
+            });
+
+            // Show notification
+            showNotification("O'simlik muvaffaqiyatli aniqlandi! 🌿");
+        }
+
+        function takePhoto() {
+            showNotification("Kamera ishga tushirildi. O'simlikka qaratib, suratga olish tugmasini bosing.");
+        }
+
+        function uploadPhoto() {
+            showNotification("Fayl tanlash oynasi ochildi. O'simlik suratini tanlang.");
+        }
+
+        function addToMyGarden() {
+            showNotification("O'simlik 'Mening bog\'im' ro'yxatiga qo'shildi! ✅");
+        }
+
+        // Waste analysis demo
+        function analyzeWaste() {
+            document.getElementById("wasteResult").style.display = 'block';
+            document.getElementById("wasteResult").scrollIntoView({
+                behavior: 'smooth'
+            });
+            showNotification("Chiqindilar tahlil qilindi. Siz 25 ball qo'lga kiritdingiz! ♻️");
+        }
+
+        function showWasteInfo() {
+            showNotification("Chiqindilarni saralash qoidalari ko'rsatilmoqda...");
+        }
+
+        // AR functionality
+        function startAR() {
+            showNotification("AR rejimi ishga tushirilmoqda. Telefon kamerangizni kvadratga qarating...");
+        }
+
+        // User profile
+        function showProfile() {
+            showNotification("Foydalanuvchi profili ochilmoqda...");
+        }
+
+        // Notification system
+        function showNotification(message) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: linear-gradient(135deg, var(--primary), var(--secondary));
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 1000;
+                max-width: 300px;
+                animation: slideIn 0.3s ease-out;
+            `;
+
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-check-circle" style="font-size: 20px;"></i>
+                    <div>${message}</div>
+                </div>
+            `;
+
+            document.body.appendChild(notification);
+
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-in';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Add CSS for animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set today's date in welcome message
+            const today = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            const dateString = today.toLocaleDateString('uz-UZ', options);
+
+            // You can update the welcome text with date if needed
+            // document.querySelector('.welcome-text').innerHTML += `<br><small>${dateString}</small>`;
+
+            // Add click handlers to tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const tabName = this.getAttribute('data-tab');
+                    switchTab(tabName);
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

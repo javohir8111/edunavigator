@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abituriyent Moduli — EDUNavigator</title>
+<link rel="stylesheet" href="css/main.css">
+<style>
+.page-header {
+  background: linear-gradient(135deg, #0A1628 0%, #1a2f5a 100%);
+  padding: 120px 48px 70px; position: relative; overflow: hidden;
+}
+.page-header::before {
+  content:''; position:absolute; top:-100px; right:-100px;
+  width:500px; height:500px;
+  background: radial-gradient(circle, rgba(0,196,154,0.15) 0%, transparent 70%);
+}
+.page-header-inner { max-width: 1180px; margin: 0 auto; position: relative; z-index: 1; }
+.page-header h1 { font-family: var(--font-display); font-size: 48px; font-weight: 800; color: #fff; margin: 16px 0 12px; }
+.page-header p { font-size: 17px; color: rgba(255,255,255,0.6); max-width: 500px; }
+
+.main-area { max-width: 1180px; margin: 0 auto; padding: 60px 48px; }
+
+/* PROFILE FORM */
+.wizard-wrap { display: grid; grid-template-columns: 280px 1fr; gap: 32px; align-items: start; }
+.wizard-sidebar {
+  background: #fff; border-radius: 20px; border: 1px solid var(--border);
+  padding: 28px; position: sticky; top: 90px;
+}
+.wizard-sidebar-title { font-size: 13px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 20px; }
+.wizard-steps-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.wizard-step-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px; border-radius: 10px; cursor: pointer;
+  transition: all 0.2s; font-size: 14px; font-weight: 600; color: var(--gray);
+}
+.wizard-step-item.active { background: rgba(27,79,255,0.08); color: var(--blue); }
+.wizard-step-item.done { color: var(--accent); }
+.wizard-step-item .step-ico { width: 28px; height: 28px; border-radius: 8px; background: #EEF2FF; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.wizard-step-item.active .step-ico { background: var(--blue); color: #fff; }
+.wizard-step-item.done .step-ico { background: rgba(0,196,154,0.15); }
+
+.wizard-content { display: flex; flex-direction: column; gap: 0; }
+.wizard-panel { display: none; }
+.wizard-panel.active { display: block; }
+
+.form-card { background: #fff; border-radius: 20px; border: 1px solid var(--border); padding: 36px; }
+.form-card-title { font-family: var(--font-display); font-size: 24px; font-weight: 800; color: var(--dark); margin-bottom: 8px; }
+.form-card-sub { font-size: 15px; color: var(--gray); margin-bottom: 32px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-footer { display: flex; justify-content: flex-end; gap: 12px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
+
+/* PSIXOLOGIK TEST */
+.test-card {
+  background: #fff; border-radius: 20px; border: 1px solid var(--border);
+  padding: 40px;
+}
+.test-progress-wrap { margin-bottom: 36px; }
+.test-progress-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.test-q-num { font-size: 13px; color: var(--gray); font-weight: 600; }
+.test-q-pct { font-size: 13px; color: var(--blue); font-weight: 700; }
+
+.test-question { font-size: 20px; font-weight: 700; color: var(--dark); margin-bottom: 28px; line-height: 1.5; }
+
+.test-options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+.test-option {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 20px; border-radius: 12px;
+  border: 2px solid #E5E9F2; cursor: pointer;
+  transition: all 0.2s; font-size: 15px; color: var(--dark); font-weight: 500;
+  background: #fff;
+}
+.test-option:hover { border-color: var(--blue-light); background: rgba(27,79,255,0.03); }
+.test-option.selected { border-color: var(--blue); background: rgba(27,79,255,0.06); color: var(--blue); }
+.test-option .opt-letter {
+  width: 32px; height: 32px; border-radius: 8px; border: 2px solid #E5E9F2;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; flex-shrink: 0; transition: all 0.2s;
+}
+.test-option.selected .opt-letter { border-color: var(--blue); background: var(--blue); color: #fff; }
+
+/* NATIJA */
+.result-card { background: #fff; border-radius: 20px; border: 1px solid var(--border); padding: 40px; }
+.result-hero { text-align: center; padding: 40px 20px; background: linear-gradient(135deg, var(--dark) 0%, #1a2f5a 100%); border-radius: 16px; margin-bottom: 40px; }
+.result-type { font-size: 13px; color: var(--accent); font-weight: 600; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.08em; }
+.result-title { font-family: var(--font-display); font-size: 32px; font-weight: 800; color: #fff; margin-bottom: 12px; }
+.result-desc { font-size: 15px; color: rgba(255,255,255,0.65); line-height: 1.7; max-width: 480px; margin: 0 auto; }
+
+.directions-title { font-size: 18px; font-weight: 700; color: var(--dark); margin-bottom: 20px; }
+.direction-item {
+  display: flex; align-items: center; gap: 20px;
+  padding: 20px; border-radius: 14px; border: 1.5px solid var(--border);
+  margin-bottom: 12px; transition: all 0.3s; cursor: pointer; background: #fff;
+}
+.direction-item:hover { border-color: var(--blue-light); background: rgba(27,79,255,0.02); transform: translateX(4px); }
+.direction-item.top { border-color: var(--accent); background: rgba(0,196,154,0.04); }
+.dir-rank { font-family: var(--font-display); font-size: 28px; font-weight: 800; color: #E5E9F2; width: 40px; flex-shrink: 0; }
+.direction-item.top .dir-rank { color: var(--accent); }
+.dir-info { flex: 1; }
+.dir-name { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+.dir-meta { font-size: 13px; color: var(--gray); }
+.dir-match {
+  font-family: var(--font-display); font-size: 24px; font-weight: 800;
+  color: var(--blue);
+}
+.direction-item.top .dir-match { color: var(--accent); }
+
+/* BALL FILTRI */
+.ball-filter { background: var(--gray-light); border-radius: 20px; padding: 32px; margin-bottom: 32px; }
+.ball-filter-title { font-size: 18px; font-weight: 700; color: var(--dark); margin-bottom: 20px; }
+.ball-input-row { display: flex; gap: 16px; align-items: flex-end; }
+.ball-input-row .form-group { flex: 1; margin: 0; }
+.ball-results { margin-top: 24px; }
+.uni-item {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 20px; background: #fff; border-radius: 12px;
+  border: 1px solid var(--border); margin-bottom: 10px;
+  transition: all 0.2s;
+}
+.uni-item:hover { border-color: var(--blue-light); transform: translateX(4px); }
+.uni-logo { width: 44px; height: 44px; border-radius: 10px; background: rgba(27,79,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.uni-info { flex: 1; }
+.uni-name { font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 3px; }
+.uni-meta { font-size: 13px; color: var(--gray); }
+.uni-status { padding: 6px 14px; border-radius: 100px; font-size: 13px; font-weight: 700; white-space: nowrap; }
+.status-ok { background: rgba(0,196,154,0.12); color: var(--accent); }
+.status-maybe { background: rgba(255,196,0,0.12); color: #B45309; }
+.status-no { background: rgba(255,71,87,0.1); color: #EF4444; }
+
+@media(max-width:900px){
+  .wizard-wrap { grid-template-columns: 1fr; }
+  .wizard-sidebar { position: static; }
+  .main-area { padding: 40px 20px; }
+  .page-header { padding: 100px 20px 50px; }
+  .page-header h1 { font-size: 32px; }
+  .form-row { grid-template-columns: 1fr; }
+  .ball-input-row { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="navbar-logo"><span class="logo-dot"></span>EDUNavigator</a>
+  <ul class="navbar-links">
+    <li><a href="index.html">Bosh sahifa</a></li>
+    <li><a href="abituriyent.html" class="active">Abituriyent</a></li>
+    <li><a href="talaba.html">Talaba</a></li>
+    <li><a href="korxona.html">Korxona</a></li>
+    <li><a href="universitetlar.html">Universitetlar</a></li>
+  </ul>
+  <div class="navbar-actions">
+    <a href="#" class="btn btn-outline btn-sm">Kirish</a>
+    <a href="#" class="btn btn-accent btn-sm">Ro'yxatdan o'tish</a>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="section-tag" style="background:rgba(0,196,154,0.12);color:var(--accent);border-color:rgba(0,196,154,0.25)"><span class="dot"></span>Abituriyent Moduli</div>
+    <h1>O'zingga mos yo'nalishni top</h1>
+    <p>Psixologik test, bilim baholash va AI tahlil asosida senga eng mos 5 ta yo'nalish aniqlanadi.</p>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div style="background:#f8faff; padding-bottom:80px;">
+<div class="main-area">
+  <div class="wizard-wrap">
+    <!-- Sidebar -->
+    <div class="wizard-sidebar">
+      <div class="wizard-sidebar-title">Bosqichlar</div>
+      <ul class="wizard-steps-list">
+        <li class="wizard-step-item active" onclick="goStep(1)">
+          <div class="step-ico">1</div> Profil
+        </li>
+        <li class="wizard-step-item" onclick="goStep(2)">
+          <div class="step-ico">2</div> Psixologik test
+        </li>
+        <li class="wizard-step-item" onclick="goStep(3)">
+          <div class="step-ico">3</div> Bilim baholash
+        </li>
+        <li class="wizard-step-item" onclick="goStep(4)">
+          <div class="step-ico">4</div> AI natija
+        </li>
+        <li class="wizard-step-item" onclick="goStep(5)">
+          <div class="step-ico">5</div> Ball filtri
+        </li>
+      </ul>
+    </div>
+
+    <!-- Content panels -->
+    <div class="wizard-content">
+
+      <!-- STEP 1: PROFIL -->
+      <div class="wizard-panel active" id="panel-1">
+        <div class="form-card">
+          <div class="form-card-title">Profilingni to'ldir</div>
+          <div class="form-card-sub">Bu ma'lumotlar AI tahlil uchun kerak. Hamma narsa maxfiy.</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Ism *</label>
+              <input class="form-input" type="text" placeholder="Ismingiz">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Familiya *</label>
+              <input class="form-input" type="text" placeholder="Familiyangiz">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Viloyat *</label>
+              <select class="form-select">
+                <option>Toshkent shahri</option>
+                <option>Toshkent viloyati</option>
+                <option>Samarqand</option>
+                <option>Farg'ona</option>
+                <option>Buxoro</option>
+                <option>Andijon</option>
+                <option>Namangan</option>
+                <option>Qashqadaryo</option>
+                <option>Surxondaryo</option>
+                <option>Xorazm</option>
+                <option>Navoiy</option>
+                <option>Jizzax</option>
+                <option>Sirdaryo</option>
+                <option>Qoraqalpog'iston</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Sinf *</label>
+              <select class="form-select">
+                <option>9-sinf</option>
+                <option>10-sinf</option>
+                <option selected>11-sinf</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Ingliz tili darajasi</label>
+              <select class="form-select">
+                <option>A1 — Boshlang'ich</option>
+                <option>A2 — Elementar</option>
+                <option selected>B1 — O'rta</option>
+                <option>B2 — O'rta yuqori</option>
+                <option>C1 — Yuqori</option>
+                <option>C2 — Mukammal</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Qiziqish yo'nalishi</label>
+              <select class="form-select">
+                <option>Aniqlanmagan</option>
+                <option>IT va texnologiya</option>
+                <option>Tibbiyot va biologiya</option>
+                <option>Iqtisodiyot va biznes</option>
+                <option>Muhandislik</option>
+                <option>Pedagogika</option>
+                <option>Huquq</option>
+                <option>San'at va dizayn</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-footer">
+            <button class="btn btn-primary" onclick="nextStep()">Keyingi: Psixologik test →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2: TEST -->
+      <div class="wizard-panel" id="panel-2">
+        <div class="test-card">
+          <div class="test-progress-wrap">
+            <div class="test-progress-info">
+              <span class="test-q-num" id="q-counter">Savol 1 / 8</span>
+              <span class="test-q-pct" id="q-pct">12%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="test-progress" style="width:12%"></div></div>
+          </div>
+
+          <div id="test-body">
+            <div class="test-question" id="test-q-text">Siz o'yin yoki musobaqa paytida qanday rol o'ynashni afzal ko'rasiz?</div>
+            <div class="test-options" id="test-opts">
+              <div class="test-option" onclick="selectOpt(this)"><div class="opt-letter">A</div>Yetakchi, jamoa strategiyasini belgilayman</div>
+              <div class="test-option" onclick="selectOpt(this)"><div class="opt-letter">B</div>Tahlilchi, ma'lumotlarni o'rganib reja tuzaman</div>
+              <div class="test-option" onclick="selectOpt(this)"><div class="opt-letter">C</div>Ijrochi, berilgan vazifani yaxshi bajaraman</div>
+              <div class="test-option" onclick="selectOpt(this)"><div class="opt-letter">D</div>Yordamchi, jamoani ruhlantirib turaman</div>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between;">
+            <button class="btn btn-ghost" onclick="prevTestQ()" id="prev-q-btn" style="visibility:hidden">← Oldingi</button>
+            <button class="btn btn-primary" onclick="nextTestQ()" id="next-q-btn" disabled>Keyingi →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3: BILIM BAHOLASH -->
+      <div class="wizard-panel" id="panel-3">
+        <div class="form-card">
+          <div class="form-card-title">Bilim baholash</div>
+          <div class="form-card-sub">Quyidagi fanlardan qaysilari senga yaxshiroq beriladi? O'zini baholash (1–5).</div>
+          <div id="subjects-list"></div>
+          <div class="form-footer">
+            <button class="btn btn-ghost" onclick="goStep(2)">← Orqaga</button>
+            <button class="btn btn-primary" onclick="goStep(4)">AI tahlil qilsin →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4: NATIJA -->
+      <div class="wizard-panel" id="panel-4">
+        <div class="result-card">
+          <div class="result-hero">
+            <div class="result-type">AI Tahlil Natijasi</div>
+            <div class="result-title">Siz — Analitik-Texnik tip</div>
+            <div class="result-desc">Mantiqiy fikrlash, muammo hal qilish va texnik bilimga moyillik kuchli. IT, muhandislik va tabiiy fanlar sizga mos.</div>
+          </div>
+
+          <div class="directions-title">Sizga eng mos yo'nalishlar:</div>
+          <div id="directions-list"></div>
+
+          <div style="margin-top:28px; display:flex; gap:12px;">
+            <button class="btn btn-ghost" onclick="goStep(3)">← Orqaga</button>
+            <button class="btn btn-primary" onclick="goStep(5)">Ball filtri →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 5: BALL FILTRI -->
+      <div class="wizard-panel" id="panel-5">
+        <div class="form-card">
+          <div class="form-card-title">Ball filtri</div>
+          <div class="form-card-sub">DTM ballingizni kiriting va qaysi universitetlarga kirish mumkinligini ko'ring.</div>
+
+          <div class="ball-filter">
+            <div class="ball-filter-title">🎯 Ballingizni kiriting</div>
+            <div class="ball-input-row">
+              <div class="form-group">
+                <label class="form-label">DTM balli (0–189)</label>
+                <input class="form-input" type="number" id="ball-input" placeholder="Masalan: 165" min="0" max="189">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Yo'nalish</label>
+                <select class="form-select" id="dir-select">
+                  <option>Barcha yo'nalishlar</option>
+                  <option>Dasturiy muhandislik</option>
+                  <option>Iqtisodiyot</option>
+                  <option>Tibbiyot</option>
+                  <option>Muhandislik</option>
+                </select>
+              </div>
+              <button class="btn btn-primary" onclick="filterByBall()" style="flex-shrink:0;">Qidirish</button>
+            </div>
+
+            <div class="ball-results" id="ball-results" style="display:none">
+              <div style="font-size:14px; font-weight:600; color:var(--gray); margin-bottom:14px;" id="results-count"></div>
+              <div id="uni-list"></div>
+            </div>
+          </div>
+
+          <div style="margin-top:8px; display:flex; gap:12px;">
+            <button class="btn btn-ghost" onclick="goStep(4)">← Orqaga</button>
+            <a href="universitetlar.html" class="btn btn-accent">Barcha universitetlarni ko'rish →</a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- wizard-content -->
+  </div><!-- wizard-wrap -->
+</div>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+let currentStep = 1;
+const totalSteps = 5;
+
+function goStep(n) {
+  document.querySelectorAll('.wizard-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.wizard-step-item').forEach((s, i) => {
+    s.classList.remove('active', 'done');
+    if (i + 1 < n) s.classList.add('done');
+    if (i + 1 === n) s.classList.add('active');
+  });
+  document.getElementById(`panel-${n}`).classList.add('active');
+  currentStep = n;
+  window.scrollTo({ top: 200, behavior: 'smooth' });
+}
+
+function nextStep() { if (currentStep < totalSteps) goStep(currentStep + 1); }
+
+// PSIXOLOGIK TEST
+const questions = [
+  { q: "Siz o'yin yoki musobaqa paytida qanday rol o'ynashni afzal ko'rasiz?", opts: ["Yetakchi, jamoa strategiyasini belgilayman", "Tahlilchi, ma'lumotlarni o'rganib reja tuzaman", "Ijrochi, berilgan vazifani yaxshi bajaraman", "Yordamchi, jamoani ruhlantirib turaman"] },
+  { q: "Qaysi faoliyat sizga zavq beradi?", opts: ["Yangi narsalar ixtiro qilish va yaratish", "Ma'lumotlarni tahlil qilish va xulosalar chiqarish", "Odamlar bilan muloqot va yordam berish", "Tabiat, hayvonlar, o'simliklar bilan ishlash"] },
+  { q: "Muammoga duch kelganda birinchi qadamingiz?", opts: ["Darhol harakat qilaman, yo'lda o'rganaman", "Atroflicha o'rganib, keyin reja tuzaman", "Tajribaliroq odamlardan maslahat so'rayman", "Yechimni intuitsiya asosida topaman"] },
+  { q: "Qaysi muhit sizga qulay?", opts: ["Tez sur'atda, yangilik va o'zgarishlar ko'p", "Tinch, tartiblı, aniq qoidalar mavjud", "Odamlar bilan ishlash, muloqot ko'p", "Tabiatda yoki laboratoriyada"] },
+  { q: "Kelajakda qanday hayot xohlaysiz?", opts: ["O'z biznesim va jamoam bor", "Mutaxassis sifatida chuqur bilim egasi", "Jamoaga foydali, yaxshi ish beruvchi", "Ijodiy erkin ish"] },
+  { q: "Qaysi fanga ko'proq vaqt sarflaysiz?", opts: ["Matematika va informatika", "Biologiya va kimyo", "Tarix va adabiyot", "Fizika va muhandislik"] },
+  { q: "Kelajak kasbingizda nimasi muhim?", opts: ["Yuqori daromad va moliyaviy mustaqillik", "Jamiyatga foydali bo'lish", "Ijodiy erkinlik va o'z g'oyalarni amalga oshirish", "Barqarorlik va kasbiy o'sish"] },
+  { q: "Sizni eng ko'p maqtagan narsa?", opts: ["Mantiqiy va to'g'ri fikrlash", "Ijodiy yondashuv va original g'oyalar", "Odamlar bilan ishlash qobiliyati", "Mas'uliyat va puxtalik"] },
+];
+
+let curQ = 0;
+const answers = new Array(questions.length).fill(null);
+
+function renderQ() {
+  const q = questions[curQ];
+  document.getElementById('test-q-text').textContent = q.q;
+  const opts = document.getElementById('test-opts');
+  const letters = ['A','B','C','D'];
+  opts.innerHTML = q.opts.map((o, i) => `
+    <div class="test-option${answers[curQ] === i ? ' selected' : ''}" onclick="selectOpt(this, ${i})">
+      <div class="opt-letter">${letters[i]}</div>${o}
+    </div>`).join('');
+  const pct = Math.round(((curQ) / questions.length) * 100);
+  document.getElementById('q-counter').textContent = `Savol ${curQ + 1} / ${questions.length}`;
+  document.getElementById('q-pct').textContent = pct + '%';
+  document.getElementById('test-progress').style.width = pct + '%';
+  document.getElementById('prev-q-btn').style.visibility = curQ > 0 ? 'visible' : 'hidden';
+  document.getElementById('next-q-btn').disabled = answers[curQ] === null;
+  document.getElementById('next-q-btn').textContent = curQ === questions.length - 1 ? 'Yakunlash ✓' : 'Keyingi →';
+}
+
+function selectOpt(el, idx) {
+  document.querySelectorAll('#panel-2 .test-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  answers[curQ] = idx;
+  document.getElementById('next-q-btn').disabled = false;
+}
+
+function nextTestQ() {
+  if (curQ < questions.length - 1) { curQ++; renderQ(); }
+  else goStep(3);
+}
+function prevTestQ() { if (curQ > 0) { curQ--; renderQ(); } }
+
+// SUBJECTS
+const subjects = [
+  { name: 'Matematika', icon: '🔢' },
+  { name: 'Fizika', icon: '⚡' },
+  { name: 'Kimyo', icon: '🧪' },
+  { name: 'Biologiya', icon: '🌿' },
+  { name: 'Informatika', icon: '💻' },
+  { name: 'Ingliz tili', icon: '🌍' },
+  { name: "O'zbek tili", icon: '📝' },
+  { name: 'Tarix', icon: '📜' },
+];
+
+const subList = document.getElementById('subjects-list');
+subList.innerHTML = subjects.map(s => `
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #F3F4F6;">
+    <div style="display:flex;align-items:center;gap:12px;font-size:15px;font-weight:600;color:var(--dark)">
+      <span style="font-size:22px">${s.icon}</span>${s.name}
+    </div>
+    <div style="display:flex;gap:6px">
+      ${[1,2,3,4,5].map(n => `<button onclick="this.parentNode.querySelectorAll('button').forEach(b=>b.style.background='');this.style.background='var(--blue)';this.style.color='#fff'" style="width:32px;height:32px;border-radius:8px;border:1.5px solid #E5E9F2;background:#fff;cursor:pointer;font-size:13px;font-weight:700;color:var(--gray);transition:all 0.2s">${n}</button>`).join('')}
+    </div>
+  </div>`).join('');
+
+// DIRECTIONS for result
+const directions = [
+  { name: "Dasturiy muhandislik", uni: "TDTU, Turin, TATU", maosh: "14–18 mln so'm", match: "94%" },
+  { name: "Sun'iy intellekt va ML", uni: "Innopolis, INHA", maosh: "18–25 mln so'm", match: "89%" },
+  { name: "Axborot xavfsizligi", uni: "TATU, MDTU", maosh: "15–20 mln so'm", match: "82%" },
+  { name: "Iqtisodiyot va moliya", uni: "TDIU, Westminster", maosh: "10–14 mln so'm", match: "74%" },
+  { name: "Muhandislik texnologiyalari", uni: "TDTU, Toshkent PI", maosh: "9–13 mln so'm", match: "68%" },
+];
+
+document.getElementById('directions-list').innerHTML = directions.map((d, i) => `
+  <div class="direction-item ${i===0?'top':''}">
+    <div class="dir-rank">${i+1}</div>
+    <div class="dir-info">
+      <div class="dir-name">${d.name}</div>
+      <div class="dir-meta">🏫 ${d.uni} &nbsp;|&nbsp; 💰 ${d.maosh}</div>
+    </div>
+    <div class="dir-match">${d.match}</div>
+  </div>`).join('');
+
+// BALL FILTRI
+const unis = [
+  { name: "Toshkent Davlat Texnika Universiteti", icon: "🏛️", min: 160, max: 189, dir: "Muhandislik", grant: "180+" },
+  { name: "TATU — Axborot texnologiyalari", icon: "💻", min: 155, max: 189, dir: "IT", grant: "172+" },
+  { name: "Turin Politexnika Universiteti", icon: "🇮🇹", min: 150, max: 189, dir: "IT", grant: "165+" },
+  { name: "Westminster O'zbekistonda", icon: "🇬🇧", min: 145, max: 189, dir: "Biznes", grant: "160+" },
+  { name: "INHA Universiteti", icon: "🇰🇷", min: 140, max: 189, dir: "IT", grant: "155+" },
+  { name: "Toshkent Davlat Iqtisodiyot Universiteti", icon: "📊", min: 130, max: 189, dir: "Iqtisodiyot", grant: "150+" },
+  { name: "Nizomiy nomidagi TDPU", icon: "📚", min: 120, max: 189, dir: "Pedagogika", grant: "140+" },
+  { name: "Samarqand Davlat Universiteti", icon: "🏫", min: 110, max: 189, dir: "Barcha", grant: "135+" },
+];
+
+function filterByBall() {
+  const ball = parseInt(document.getElementById('ball-input').value);
+  if (!ball || ball < 0 || ball > 189) { showToast("Iltimos, to'g'ri ball kiriting (0–189)", "error"); return; }
+  const filtered = unis.map(u => ({
+    ...u,
+    status: ball >= u.min + 10 ? 'ok' : ball >= u.min ? 'maybe' : 'no',
+    statusText: ball >= u.min + 10 ? "✓ Kirish mumkin" : ball >= u.min ? "~ Ehtimol" : "✗ Balangi kam",
+  })).sort((a,b) => {
+    const order = {ok:0,maybe:1,no:2};
+    return order[a.status] - order[b.status];
+  });
+
+  const ok = filtered.filter(u => u.status === 'ok').length;
+  document.getElementById('results-count').textContent = `Ball: ${ball} — ${ok} ta universitetga kirish mumkin`;
+  document.getElementById('uni-list').innerHTML = filtered.map(u => `
+    <div class="uni-item">
+      <div class="uni-logo">${u.icon}</div>
+      <div class="uni-info">
+        <div class="uni-name">${u.name}</div>
+        <div class="uni-meta">📌 ${u.dir} &nbsp;|&nbsp; 🏆 Grant: ${u.grant}</div>
+      </div>
+      <div class="uni-status status-${u.status}">${u.statusText}</div>
+    </div>`).join('');
+
+  document.getElementById('ball-results').style.display = 'block';
+  showToast(`${ok} ta universitetga kirish imkoniyati mavjud!`, "success");
+}
+
+renderQ();
+</script>
+</body>
+</html>

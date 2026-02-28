@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Universitetlar — EDUNavigator</title>
+<link rel="stylesheet" href="css/main.css">
+<style>
+.page-header {
+  background: linear-gradient(135deg, #0A1628 0%, #0a2a1a 100%);
+  padding: 120px 48px 70px;
+}
+.page-header-inner { max-width: 1280px; margin: 0 auto; }
+.page-header h1 { font-family: var(--font-display); font-size: 44px; font-weight: 800; color: #fff; margin: 16px 0 12px; }
+.page-header p { font-size: 17px; color: rgba(255,255,255,0.6); max-width: 500px; }
+
+.uni-layout { max-width: 1280px; margin: 0 auto; padding: 40px 48px 80px; display: grid; grid-template-columns: 280px 1fr; gap: 28px; align-items: start; }
+
+/* FILTERS */
+.filter-panel { background: #fff; border-radius: 20px; border: 1px solid var(--border); padding: 24px; position: sticky; top: 90px; }
+.filter-title { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
+.filter-group { margin-bottom: 20px; }
+.filter-group-title { font-size: 12px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+.filter-check { display: flex; align-items: center; gap: 10px; padding: 6px 0; cursor: pointer; font-size: 14px; color: var(--dark); }
+.filter-check input { accent-color: var(--blue); width: 15px; height: 15px; }
+.filter-range { width: 100%; accent-color: var(--blue); }
+
+/* UNI GRID */
+.uni-main { display: flex; flex-direction: column; gap: 20px; }
+.uni-search-bar { background: #fff; border-radius: 14px; border: 1px solid var(--border); padding: 16px 20px; display: flex; gap: 14px; align-items: center; }
+.uni-search-input { flex: 1; border: none; outline: none; font-family: var(--font); font-size: 15px; color: var(--dark); }
+.uni-search-input::placeholder { color: #A0AEC0; }
+.uni-sort { display: flex; gap: 8px; }
+
+.uni-results-info { font-size: 14px; color: var(--gray); font-weight: 500; }
+
+/* UNI CARD */
+.uni-card {
+  background: #fff; border-radius: 20px; border: 1px solid var(--border);
+  padding: 28px; transition: all 0.3s; cursor: pointer;
+}
+.uni-card:hover { border-color: var(--blue-light); box-shadow: 0 20px 60px rgba(10,22,40,0.1); transform: translateY(-3px); }
+.uni-card.selected { border-color: var(--accent); border-width: 2px; }
+.uni-card-top { display: flex; align-items: flex-start; gap: 18px; margin-bottom: 18px; }
+.uni-logo-big { width: 60px; height: 60px; border-radius: 16px; background: rgba(27,79,255,0.09); display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; }
+.uni-card-name { font-family: var(--font-display); font-size: 18px; font-weight: 800; color: var(--dark); margin-bottom: 4px; }
+.uni-card-short { font-size: 13px; color: var(--gray); margin-bottom: 8px; }
+.uni-card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.uni-card-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 18px; }
+.uc-stat { background: var(--gray-light); border-radius: 10px; padding: 12px; }
+.uc-stat-val { font-size: 18px; font-weight: 800; color: var(--dark); font-family: var(--font-display); margin-bottom: 3px; }
+.uc-stat-lbl { font-size: 11px; color: var(--gray); font-weight: 500; }
+.uni-card-foot { display: flex; align-items: center; justify-content: space-between; }
+.uni-rating { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; color: var(--dark); }
+.stars { color: #F59E0B; }
+
+/* COMPARE */
+.compare-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 500;
+  background: var(--dark); padding: 16px 48px;
+  display: flex; align-items: center; gap: 24px;
+  transform: translateY(100%); transition: transform 0.3s;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.compare-bar.visible { transform: translateY(0); }
+.compare-bar-title { font-weight: 700; color: #fff; font-size: 15px; flex-shrink: 0; }
+.compare-items { display: flex; gap: 12px; flex: 1; }
+.compare-item { background: rgba(255,255,255,0.08); border-radius: 10px; padding: 8px 14px; display: flex; align-items: center; gap: 10px; font-size: 14px; color: #fff; font-weight: 600; }
+.compare-item-del { background: none; border: none; color: rgba(255,255,255,0.4); cursor: pointer; font-size: 16px; }
+.compare-item-del:hover { color: #fff; }
+
+/* MODAL COMPARE */
+.compare-modal-wrap { overflow-x: auto; }
+.compare-table { width: 100%; border-collapse: collapse; min-width: 500px; }
+.compare-table th { background: var(--dark); color: #fff; padding: 14px 16px; font-size: 13px; font-weight: 700; text-align: center; }
+.compare-table td { padding: 12px 16px; border-bottom: 1px solid #F3F6FF; font-size: 14px; text-align: center; }
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table .row-lbl { font-weight: 700; color: var(--dark); text-align: left; background: #F8FBFF; }
+
+@media(max-width:900px){
+  .uni-layout { grid-template-columns: 1fr; padding: 20px; }
+  .filter-panel { position: static; }
+  .page-header { padding: 100px 20px 50px; }
+  .page-header h1 { font-size: 30px; }
+  .uni-card-stats { grid-template-columns: repeat(2,1fr); }
+  .compare-bar { padding: 14px 20px; flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="navbar-logo"><span class="logo-dot"></span>EDUNavigator</a>
+  <ul class="navbar-links">
+    <li><a href="index.html">Bosh sahifa</a></li>
+    <li><a href="abituriyent.html">Abituriyent</a></li>
+    <li><a href="talaba.html">Talaba</a></li>
+    <li><a href="korxona.html">Korxona</a></li>
+    <li><a href="universitetlar.html" class="active">Universitetlar</a></li>
+  </ul>
+  <div class="navbar-actions">
+    <a href="#" class="btn btn-outline btn-sm">Kirish</a>
+    <a href="#" class="btn btn-accent btn-sm">Ro'yxatdan o'tish</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="section-tag" style="background:rgba(0,196,154,0.12);color:var(--accent);border-color:rgba(0,196,154,0.25)"><span class="dot"></span>Universitetlar</div>
+    <h1>O'zbekistondagi 222 ta OTM</h1>
+    <p>Reyting, bitirganlar statistikasi, o'rtacha maosh va kirish ballari bo'yicha solishtiring.</p>
+  </div>
+</div>
+
+<div style="background:#f0f4ff">
+<div class="uni-layout">
+  <!-- FILTERS -->
+  <div class="filter-panel">
+    <div class="filter-title">Filtrlash <button class="btn btn-ghost btn-sm" onclick="resetFilters()">Tozalash</button></div>
+
+    <div class="filter-group">
+      <div class="filter-group-title">Tur</div>
+      <label class="filter-check"><input type="checkbox" checked onchange="applyFilters()"> Davlat OTM</label>
+      <label class="filter-check"><input type="checkbox" checked onchange="applyFilters()"> Xususiy OTM</label>
+      <label class="filter-check"><input type="checkbox" checked onchange="applyFilters()"> Xorijiy filial</label>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-group-title">Viloyat</div>
+      <select class="form-select" onchange="applyFilters()" id="region-filter">
+        <option value="">Barcha viloyatlar</option>
+        <option>Toshkent</option>
+        <option>Samarqand</option>
+        <option>Farg'ona</option>
+        <option>Buxoro</option>
+        <option>Andijon</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-group-title">Yo'nalish</div>
+      <select class="form-select" onchange="applyFilters()" id="dir-filter">
+        <option value="">Barcha yo'nalishlar</option>
+        <option>IT va texnologiya</option>
+        <option>Muhandislik</option>
+        <option>Iqtisodiyot</option>
+        <option>Tibbiyot</option>
+        <option>Pedagogika</option>
+        <option>Huquq</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-group-title">Minimal DTM balli</div>
+      <input type="range" class="filter-range" id="ball-range" min="80" max="185" value="100" oninput="document.getElementById('ball-val').textContent=this.value;applyFilters()">
+      <div style="font-size:13px;color:var(--blue);font-weight:700;margin-top:6px">Ball: <span id="ball-val">100</span>+</div>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-group-title">Reyting</div>
+      <label class="filter-check"><input type="checkbox" onchange="applyFilters()"> ⭐ Top 10</label>
+      <label class="filter-check"><input type="checkbox" onchange="applyFilters()"> 🌍 Xalqaro akkreditatsiya</label>
+      <label class="filter-check"><input type="checkbox" onchange="applyFilters()"> 🎓 Magistratura bor</label>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="uni-main">
+    <div class="uni-search-bar">
+      <span style="font-size:20px">🔍</span>
+      <input class="uni-search-input" id="uni-search" placeholder="Universitet nomi yoki yo'nalish bo'yicha qidiring..." oninput="applyFilters()">
+      <div class="uni-sort">
+        <select class="form-select" style="width:auto;padding:8px 12px;font-size:13px" onchange="applyFilters()" id="sort-by">
+          <option value="rating">Reyting bo'yicha</option>
+          <option value="ball">Ball bo'yicha</option>
+          <option value="salary">Maosh bo'yicha</option>
+          <option value="employed">Ishga kirish %</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="flex-between">
+      <div class="uni-results-info" id="uni-count">Yuklanmoqda...</div>
+      <span id="compare-hint" style="font-size:13px;color:var(--gray)">Solishtirish uchun kartaga bosing (max 3)</span>
+    </div>
+
+    <div id="uni-list-container"></div>
+  </div>
+</div>
+</div>
+
+<!-- COMPARE BAR -->
+<div class="compare-bar" id="compare-bar">
+  <div class="compare-bar-title">Solishtirish:</div>
+  <div class="compare-items" id="compare-items-list"></div>
+  <button class="btn btn-accent btn-sm" onclick="openModal('compare-modal')">Solishtir →</button>
+  <button class="btn btn-outline btn-sm" onclick="clearCompare()">Tozalash</button>
+</div>
+
+<!-- COMPARE MODAL -->
+<div class="modal-overlay" id="compare-modal">
+  <div class="modal" style="max-width:720px;width:100%">
+    <button class="modal-close" onclick="closeModal('compare-modal')">✕</button>
+    <div style="font-family:var(--font-display);font-size:22px;font-weight:800;margin-bottom:24px">Universitetlar solishtirmasi</div>
+    <div class="compare-modal-wrap"><table class="compare-table" id="compare-table-el"></table></div>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+const universities = [
+  { id:1, name:"Toshkent Davlat Texnika Universiteti", short:"TDTU", icon:"🏛️", type:"Davlat", region:"Toshkent", dirs:["Muhandislik","IT va texnologiya"], ball:162, gpa:"3.2", employed:88, salary:"11.4 mln", graduates:1240, rating:4.6, top10:true, intl:true, master:true },
+  { id:2, name:"Toshkent Axborot Texnologiyalari Universiteti", short:"TATU", icon:"💻", type:"Davlat", region:"Toshkent", dirs:["IT va texnologiya"], ball:168, gpa:"3.4", employed:92, salary:"14.2 mln", graduates:980, rating:4.7, top10:true, intl:true, master:true },
+  { id:3, name:"Turin Politexnika Universiteti Toshkentda", short:"Turin", icon:"🇮🇹", type:"Xorijiy filial", region:"Toshkent", dirs:["IT va texnologiya","Muhandislik"], ball:155, gpa:"3.5", employed:94, salary:"16.8 mln", graduates:320, rating:4.8, top10:true, intl:true, master:true },
+  { id:4, name:"Westminster O'zbekistonda", short:"Westminster", icon:"🇬🇧", type:"Xorijiy filial", region:"Toshkent", dirs:["Iqtisodiyot","IT va texnologiya"], ball:148, gpa:"3.3", employed:91, salary:"13.5 mln", graduates:410, rating:4.7, top10:true, intl:true, master:true },
+  { id:5, name:"INHA Universiteti", short:"INHA", icon:"🇰🇷", type:"Xorijiy filial", region:"Toshkent", dirs:["IT va texnologiya","Muhandislik"], ball:151, gpa:"3.4", employed:90, salary:"13.1 mln", graduates:380, rating:4.6, top10:true, intl:true, master:true },
+  { id:6, name:"Toshkent Davlat Iqtisodiyot Universiteti", short:"TDIU", icon:"📊", type:"Davlat", region:"Toshkent", dirs:["Iqtisodiyot"], ball:138, gpa:"3.1", employed:82, salary:"9.8 mln", graduates:1100, rating:4.3, top10:false, intl:false, master:true },
+  { id:7, name:"O'zbekiston Milliy Universiteti", short:"NUUz", icon:"🏫", type:"Davlat", region:"Toshkent", dirs:["IT va texnologiya","Muhandislik","Pedagogika"], ball:145, gpa:"3.2", employed:80, salary:"9.2 mln", graduates:2100, rating:4.4, top10:true, intl:false, master:true },
+  { id:8, name:"Toshkent Davlat Pedagogika Universiteti", short:"TDPU", icon:"📚", type:"Davlat", region:"Toshkent", dirs:["Pedagogika"], ball:120, gpa:"3.0", employed:76, salary:"7.5 mln", graduates:1800, rating:4.1, top10:false, intl:false, master:true },
+  { id:9, name:"Samarqand Davlat Universiteti", short:"SamDU", icon:"🌟", type:"Davlat", region:"Samarqand", dirs:["Muhandislik","Pedagogika","IT va texnologiya"], ball:118, gpa:"3.0", employed:74, salary:"7.2 mln", graduates:1600, rating:4.0, top10:false, intl:false, master:true },
+  { id:10, name:"Farg'ona Politexnika Instituti", short:"FarPI", icon:"⚙️", type:"Davlat", region:"Farg'ona", dirs:["Muhandislik"], ball:110, gpa:"2.9", employed:71, salary:"6.9 mln", graduates:920, rating:3.9, top10:false, intl:false, master:false },
+  { id:11, name:"Innopolis O'zbekiston", short:"Innopolis", icon:"🚀", type:"Xususiy", region:"Toshkent", dirs:["IT va texnologiya"], ball:160, gpa:"3.6", employed:96, salary:"18.4 mln", graduates:120, rating:4.9, top10:true, intl:true, master:true },
+  { id:12, name:"Toshkent Tibbiyot Akademiyasi", short:"TTA", icon:"🏥", type:"Davlat", region:"Toshkent", dirs:["Tibbiyot"], ball:172, gpa:"3.8", employed:95, salary:"12.6 mln", graduates:890, rating:4.8, top10:true, intl:true, master:true },
+];
+
+let compareList = [];
+
+function renderStars(r) {
+  return '★'.repeat(Math.floor(r)) + (r % 1 >= 0.5 ? '½' : '') + '☆'.repeat(5-Math.ceil(r));
+}
+
+function renderUniCards(list) {
+  const container = document.getElementById('uni-list-container');
+  if (!list.length) { container.innerHTML = '<div style="text-align:center;padding:60px;color:var(--gray)">Hech narsa topilmadi</div>'; return; }
+  container.innerHTML = list.map(u => `
+    <div class="uni-card ${compareList.includes(u.id)?'selected':''}" id="uni-${u.id}" onclick="toggleCompare(${u.id})" style="margin-bottom:16px">
+      <div class="uni-card-top">
+        <div class="uni-logo-big">${u.icon}</div>
+        <div style="flex:1">
+          <div class="uni-card-name">${u.name}</div>
+          <div class="uni-card-short">${u.short} · ${u.type} · ${u.region}</div>
+          <div class="uni-card-tags">
+            ${u.dirs.map(d=>`<span class="badge badge-blue">${d}</span>`).join('')}
+            ${u.top10?'<span class="badge badge-accent">Top 10</span>':''}
+            ${u.intl?'<span class="badge" style="background:rgba(139,92,246,0.1);color:#8B5CF6">Xalqaro</span>':''}
+          </div>
+        </div>
+        ${compareList.includes(u.id)?'<div style="color:var(--accent);font-weight:700;font-size:13px">✓ Tanlandi</div>':''}
+      </div>
+      <div class="uni-card-stats">
+        <div class="uc-stat"><div class="uc-stat-val">${u.ball}+</div><div class="uc-stat-lbl">Grant balli</div></div>
+        <div class="uc-stat"><div class="uc-stat-val">${u.employed}%</div><div class="uc-stat-lbl">Ishga kirish</div></div>
+        <div class="uc-stat"><div class="uc-stat-val">${u.salary}</div><div class="uc-stat-lbl">O'rt. maosh</div></div>
+        <div class="uc-stat"><div class="uc-stat-val">${u.graduates}</div><div class="uc-stat-lbl">Bitiruvchilar/yil</div></div>
+      </div>
+      <div class="uni-card-foot">
+        <div class="uni-rating"><span class="stars">${renderStars(u.rating)}</span> ${u.rating}</div>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">Batafsil</button>
+          <a href="abituriyent.html" class="btn btn-primary btn-sm" onclick="event.stopPropagation()">Ball filtri</a>
+        </div>
+      </div>
+    </div>`).join('');
+  document.getElementById('uni-count').textContent = `${list.length} ta universitet topildi`;
+}
+
+function applyFilters() {
+  const search = document.getElementById('uni-search').value.toLowerCase();
+  const region = document.getElementById('region-filter').value;
+  const dir = document.getElementById('dir-filter').value;
+  const minBall = parseInt(document.getElementById('ball-range').value);
+  const sort = document.getElementById('sort-by').value;
+
+  let filtered = universities.filter(u => {
+    if (search && !u.name.toLowerCase().includes(search) && !u.short.toLowerCase().includes(search)) return false;
+    if (region && u.region !== region) return false;
+    if (dir && !u.dirs.includes(dir)) return false;
+    if (u.ball < minBall) return false;
+    return true;
+  });
+
+  filtered.sort((a,b) => {
+    if (sort === 'ball') return b.ball - a.ball;
+    if (sort === 'salary') return parseFloat(b.salary) - parseFloat(a.salary);
+    if (sort === 'employed') return b.employed - a.employed;
+    return b.rating - a.rating;
+  });
+
+  renderUniCards(filtered);
+}
+
+function toggleCompare(id) {
+  if (compareList.includes(id)) {
+    compareList = compareList.filter(i => i !== id);
+  } else {
+    if (compareList.length >= 3) { showToast("Maksimal 3 ta solishtirish mumkin", "error"); return; }
+    compareList.push(id);
+  }
+  applyFilters();
+  updateCompareBar();
+}
+
+function updateCompareBar() {
+  const bar = document.getElementById('compare-bar');
+  const items = document.getElementById('compare-items-list');
+  if (!compareList.length) { bar.classList.remove('visible'); return; }
+  bar.classList.add('visible');
+  items.innerHTML = compareList.map(id => {
+    const u = universities.find(u => u.id === id);
+    return `<div class="compare-item">${u.icon} ${u.short} <button class="compare-item-del" onclick="toggleCompare(${id})">✕</button></div>`;
+  }).join('');
+  buildCompareTable();
+}
+
+function buildCompareTable() {
+  const unis = compareList.map(id => universities.find(u => u.id === id));
+  const rows = [
+    ['Tur', u => u.type],
+    ['Viloyat', u => u.region],
+    ['Grant balli', u => u.ball + '+'],
+    ['Ishga kirish', u => u.employed + '%'],
+    ["O'rt. maosh", u => u.salary],
+    ['Reyting', u => u.rating + '/5'],
+    ['Bitiruvchilar/yil', u => u.graduates],
+    ['Magistratura', u => u.master ? '✅' : '❌'],
+    ['Xalqaro akkred.', u => u.intl ? '✅' : '❌'],
+  ];
+  const table = document.getElementById('compare-table-el');
+  table.innerHTML = `
+    <tr><th>Ko'rsatkich</th>${unis.map(u=>`<th>${u.icon} ${u.short}</th>`).join('')}</tr>
+    ${rows.map(([lbl, fn])=>`<tr><td class="row-lbl">${lbl}</td>${unis.map(u=>`<td>${fn(u)}</td>`).join('')}</tr>`).join('')}`;
+}
+
+function clearCompare() { compareList = []; applyFilters(); updateCompareBar(); }
+function resetFilters() {
+  document.getElementById('uni-search').value = '';
+  document.getElementById('region-filter').value = '';
+  document.getElementById('dir-filter').value = '';
+  document.getElementById('ball-range').value = 100;
+  document.getElementById('ball-val').textContent = 100;
+  applyFilters();
+}
+
+applyFilters();
+</script>
+</body>
+</html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Korxona Moduli — EDUNavigator</title>
+<link rel="stylesheet" href="css/main.css">
+<style>
+body { background: #f0f4ff; }
+
+.page-header {
+  background: linear-gradient(135deg, #0A1628 0%, #1a1050 100%);
+  padding: 120px 48px 70px; position: relative; overflow: hidden;
+}
+.page-header::before {
+  content: ''; position: absolute; bottom: -100px; right: -50px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(139,92,246,0.2) 0%, transparent 70%);
+}
+.page-header-inner { max-width: 1180px; margin: 0 auto; position: relative; z-index: 1; }
+.page-header h1 { font-family: var(--font-display); font-size: 44px; font-weight: 800; color: #fff; margin: 16px 0 12px; }
+.page-header p { font-size: 17px; color: rgba(255,255,255,0.6); max-width: 500px; }
+
+/* CORP LOGIN */
+.corp-login { max-width: 480px; margin: 0 auto; padding: 80px 20px; }
+.corp-card { background: #fff; border-radius: 24px; padding: 44px; box-shadow: 0 40px 100px rgba(10,22,40,0.15); }
+
+/* DASHBOARD */
+.corp-dash { max-width: 1280px; margin: 0 auto; padding: 40px 48px 80px; }
+
+/* AI SEARCH */
+.ai-search-box {
+  background: var(--dark); border-radius: 24px; padding: 40px;
+  position: relative; overflow: hidden; margin-bottom: 32px;
+}
+.ai-search-box::before {
+  content: ''; position: absolute; top: -50%; right: -10%;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(27,79,255,0.2) 0%, transparent 70%);
+  pointer-events: none;
+}
+.ai-search-title { font-family: var(--font-display); font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+.ai-search-sub { font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 24px; }
+.ai-prompt-wrap { position: relative; }
+.ai-prompt {
+  width: 100%; padding: 18px 140px 18px 20px;
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 14px; background: rgba(255,255,255,0.05);
+  font-family: var(--font); font-size: 15px; color: #fff; outline: none;
+  transition: all 0.2s;
+}
+.ai-prompt::placeholder { color: rgba(255,255,255,0.35); }
+.ai-prompt:focus { border-color: var(--accent); background: rgba(255,255,255,0.08); }
+.ai-prompt-btn {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+}
+.ai-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.ai-chip {
+  background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7);
+  border: 1px solid rgba(255,255,255,0.12); border-radius: 100px;
+  padding: 5px 14px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s;
+}
+.ai-chip:hover { background: rgba(27,79,255,0.3); color: #fff; border-color: var(--blue-light); }
+
+/* STATS */
+.corp-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 28px; }
+.corp-stat { background: #fff; border-radius: 16px; border: 1px solid var(--border); padding: 20px; text-align: center; }
+.corp-stat-num { font-family: var(--font-display); font-size: 32px; font-weight: 800; color: var(--blue); margin-bottom: 4px; }
+.corp-stat-lbl { font-size: 13px; color: var(--gray); }
+
+/* RESULTS */
+.results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.results-title { font-size: 18px; font-weight: 700; color: var(--dark); }
+.candidate-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.candidate-card {
+  background: #fff; border-radius: 16px; border: 1px solid var(--border);
+  padding: 24px; transition: all 0.3s; cursor: pointer;
+}
+.candidate-card:hover { border-color: var(--blue-light); transform: translateY(-4px); box-shadow: 0 20px 60px rgba(10,22,40,0.12); }
+.cand-top { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+.cand-avatar { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; color: #fff; flex-shrink: 0; }
+.cand-name { font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 3px; }
+.cand-univ { font-size: 12px; color: var(--gray); }
+.cand-match-bar { margin-bottom: 14px; }
+.cand-match-num { font-family: var(--font-display); font-size: 28px; font-weight: 800; color: var(--accent); float: right; }
+.cand-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.cand-tag { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 100px; background: rgba(27,79,255,0.08); color: var(--blue); }
+.cand-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+.cand-stat-item { background: var(--gray-light); border-radius: 8px; padding: 8px 12px; }
+.cand-stat-lbl { font-size: 11px; color: var(--gray); font-weight: 500; }
+.cand-stat-val { font-size: 14px; font-weight: 700; color: var(--dark); }
+
+/* VACANCIES POSTED */
+.vac-posted-card { background: #fff; border-radius: 20px; border: 1px solid var(--border); padding: 28px; margin-bottom: 24px; }
+.vac-posted-item { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid #F3F6FF; }
+.vac-posted-item:last-child { border-bottom: none; }
+.vpi-left { display: flex; align-items: center; gap: 14px; }
+.vpi-icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(27,79,255,0.09); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.vpi-role { font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 3px; }
+.vpi-meta { font-size: 12px; color: var(--gray); }
+.vpi-right { display: flex; align-items: center; gap: 20px; text-align: right; }
+.vpi-apps { font-size: 22px; font-weight: 800; color: var(--blue); font-family: var(--font-display); }
+.vpi-apps-lbl { font-size: 11px; color: var(--gray); }
+
+@media(max-width:900px){
+  .corp-dash { padding: 20px; }
+  .corp-stats { grid-template-columns: repeat(2,1fr); }
+  .candidate-grid { grid-template-columns: 1fr; }
+  .page-header { padding: 100px 20px 50px; }
+  .page-header h1 { font-size: 30px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="navbar-logo"><span class="logo-dot"></span>EDUNavigator</a>
+  <ul class="navbar-links">
+    <li><a href="index.html">Bosh sahifa</a></li>
+    <li><a href="abituriyent.html">Abituriyent</a></li>
+    <li><a href="talaba.html">Talaba</a></li>
+    <li><a href="korxona.html" class="active">Korxona</a></li>
+    <li><a href="universitetlar.html">Universitetlar</a></li>
+  </ul>
+  <div class="navbar-actions" id="corp-nav-btns">
+    <a href="#" class="btn btn-outline btn-sm" onclick="showCorpDash()">Demo: Kirish</a>
+    <a href="#" class="btn btn-accent btn-sm">Ro'yxatdan o'tish</a>
+  </div>
+</nav>
+
+<!-- LOGIN -->
+<div id="corp-login-view">
+  <div class="page-header">
+    <div class="page-header-inner">
+      <div class="section-tag" style="background:rgba(139,92,246,0.12);color:#8B5CF6;border-color:rgba(139,92,246,0.25)"><span class="dot" style="background:#8B5CF6"></span>Korxona Moduli</div>
+      <h1>AI bilan eng yaxshi talabani top</h1>
+      <p>Oddiy prompt yozing — AI bazadan eng mos kadrni topadi. HR xarajatlarini kamaytiring.</p>
+    </div>
+  </div>
+  <div class="corp-login">
+    <div class="corp-card">
+      <div style="text-align:center;margin-bottom:28px">
+        <div style="font-size:36px;margin-bottom:8px">🏢</div>
+        <div style="font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--dark)">Korxona kabinetiga kirish</div>
+        <div style="font-size:14px;color:var(--gray);margin-top:6px">HR va kompaniyalar uchun</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Kompaniya nomi</label>
+        <input class="form-input" value="Uzum Tech LLC">
+      </div>
+      <div class="form-group">
+        <label class="form-label">INN</label>
+        <input class="form-input" value="302345678">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" value="hr@uzum.uz">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Parol</label>
+        <input class="form-input" type="password" value="password123">
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;" onclick="showCorpDash()">Kirish →</button>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="corp-dash-view" style="display:none">
+  <div style="background:var(--dark);padding:90px 48px 30px;border-bottom:1px solid rgba(255,255,255,0.06)">
+    <div style="max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:6px">Xush kelibsiz</div>
+        <div style="font-family:var(--font-display);font-size:28px;font-weight:800;color:#fff">Uzum Tech LLC</div>
+      </div>
+      <button class="btn btn-accent btn-sm" onclick="openModal('new-vac-modal')">+ Yangi vakansiya</button>
+    </div>
+  </div>
+
+  <div class="corp-dash">
+    <!-- STATS -->
+    <div class="corp-stats">
+      <div class="corp-stat"><div class="corp-stat-num">4</div><div class="corp-stat-lbl">Faol vakansiyalar</div></div>
+      <div class="corp-stat"><div class="corp-stat-num" style="color:var(--accent)">47</div><div class="corp-stat-lbl">Jami arizalar</div></div>
+      <div class="corp-stat"><div class="corp-stat-num">12</div><div class="corp-stat-lbl">Ko'rib chiqilmoqda</div></div>
+      <div class="corp-stat"><div class="corp-stat-num">3</div><div class="corp-stat-lbl">Yollangan talaba</div></div>
+    </div>
+
+    <!-- AI SEARCH -->
+    <div class="ai-search-box">
+      <div class="ai-search-title">🤖 AI Kadr Qidirish</div>
+      <div class="ai-search-sub">Oddiy so'z bilan yozing — AI bazadan eng mos talabalarni topadi</div>
+      <div class="ai-prompt-wrap">
+        <input class="ai-prompt" id="ai-prompt-input" placeholder="Masalan: ingliz tili bilgan, GPA 3.5+ bo'lgan 3-kurs IT talabasini istayman..." value="Python bilgan, GPA 3.5+ bo'lgan 3-4 kurs talabasi, part-time ishlashi mumkin">
+        <button class="btn btn-accent ai-prompt-btn" onclick="runAiSearch()">Qidirish →</button>
+      </div>
+      <div class="ai-chips">
+        <span class="ai-chip" onclick="setPrompt('IT yo\'nalishi, 3-kurs, ingliz tili B2+')">💻 IT talabasi</span>
+        <span class="ai-chip" onclick="setPrompt('Iqtisodiyot yo\'nalishi, GPA 3.7+, stajior')">📊 Iqtisodchi</span>
+        <span class="ai-chip" onclick="setPrompt('Dasturlash bilgan, GitHub profili bor, 4-kurs')">🚀 Developer intern</span>
+        <span class="ai-chip" onclick="setPrompt('Marketing, ijtimoiy tarmoqlar, kreativ, 2-3 kurs')">📢 Marketolog</span>
+        <span class="ai-chip" onclick="setPrompt('Muhandislik yo\'nalishi, matematika kuchli, full-time')">⚙️ Muhandis</span>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div id="search-results" style="display:none; margin-bottom:32px;">
+      <div class="results-header">
+        <div class="results-title" id="results-title">Natijalar</div>
+        <div style="display:flex;gap:10px">
+          <span class="badge badge-accent" id="results-badge"></span>
+          <button class="btn btn-ghost btn-sm">Filtrlash</button>
+        </div>
+      </div>
+      <div class="candidate-grid" id="candidate-grid"></div>
+    </div>
+
+    <!-- POSTED VACANCIES -->
+    <div class="vac-posted-card">
+      <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="font-size:17px;font-weight:700;color:var(--dark)">Joylashtirilgan vakansiyalar</div>
+        <button class="btn btn-ghost btn-sm">Barchasini ko'rish</button>
+      </div>
+      <div id="vac-posted-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: New Vacancy -->
+<div class="modal-overlay" id="new-vac-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('new-vac-modal')">✕</button>
+    <div style="font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--dark);margin-bottom:20px">Yangi vakansiya</div>
+    <div class="form-group">
+      <label class="form-label">Lavozim nomi</label>
+      <input class="form-input" placeholder="Junior Python Developer">
+    </div>
+    <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="form-group">
+        <label class="form-label">Minimal GPA</label>
+        <input class="form-input" placeholder="3.5">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Kurs</label>
+        <select class="form-select"><option>3-4 kurs</option><option>2-3 kurs</option><option>Bitiruvchi</option></select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Talab qilinadigan ko'nikmalar</label>
+      <input class="form-input" placeholder="Python, SQL, Git...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Ish tartibi</label>
+      <select class="form-select"><option>Part-time</option><option>Full-time</option><option>Remote</option><option>Stajіrovka</option></select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Maosh (so'm/oy)</label>
+      <input class="form-input" placeholder="3 000 000 – 6 000 000">
+    </div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:13px;" onclick="closeModal('new-vac-modal');showToast('Vakansiya joylashtirildi! AI talabalarni qidirmoqda...','success')">Joylashtirish →</button>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+const avatarColors = ['#1B4FFF','#00C49A','#8B5CF6','#F59E0B','#EF4444','#06B6D4'];
+const candidates = [
+  { name: "Asilbek M.", univ: "TDTU · Dasturiy muhandislik · 3-kurs", gpa: "3.87", lang: "B2", skills: ["Python","SQL","Django","Git"], avail: "Part-time", match: 97, city: "Toshkent" },
+  { name: "Zulfiya K.", univ: "TATU · IT · 4-kurs", gpa: "3.72", lang: "C1", skills: ["Python","FastAPI","PostgreSQL"], avail: "Part-time", match: 92, city: "Toshkent" },
+  { name: "Jasur T.", univ: "Westminster · CS · 3-kurs", gpa: "3.65", lang: "B2", skills: ["Python","Machine Learning","SQL"], avail: "Flex", match: 88, city: "Toshkent" },
+  { name: "Malika R.", univ: "TDTU · Axborot tizim · 3-kurs", gpa: "3.91", lang: "B1", skills: ["Python","Data Analysis","Excel"], avail: "Part-time", match: 84, city: "Chirchiq" },
+  { name: "Otabek N.", univ: "INHA · Computer Eng. · 4-kurs", gpa: "3.58", lang: "B2", skills: ["Python","Django","MySQL"], avail: "Full-time", match: 81, city: "Toshkent" },
+  { name: "Kamola S.", univ: "Turin Politexnika · IT · 3-kurs", gpa: "3.79", lang: "C1", skills: ["Python","Flask","Linux"], avail: "Part-time", match: 78, city: "Toshkent" },
+];
+
+function showCorpDash() {
+  document.getElementById('corp-login-view').style.display = 'none';
+  document.getElementById('corp-dash-view').style.display = 'block';
+  document.getElementById('corp-nav-btns').innerHTML = '<span style="font-size:14px;color:rgba(255,255,255,0.7);font-weight:600">🏢 Uzum Tech</span>';
+  loadPostedVacs();
+  showToast("Xush kelibsiz, Uzum Tech!", "success");
+}
+
+function setPrompt(txt) {
+  document.getElementById('ai-prompt-input').value = txt;
+}
+
+function runAiSearch() {
+  const prompt = document.getElementById('ai-prompt-input').value.trim();
+  if (!prompt) return;
+  showToast("AI qidiryapti...", "info");
+  setTimeout(() => {
+    document.getElementById('search-results').style.display = 'block';
+    document.getElementById('results-title').textContent = `"${prompt.substring(0,50)}..." — natijalar`;
+    document.getElementById('results-badge').textContent = `${candidates.length} ta topildi`;
+    document.getElementById('candidate-grid').innerHTML = candidates.map((c, i) => `
+      <div class="candidate-card">
+        <div class="cand-top">
+          <div class="cand-avatar" style="background:${avatarColors[i % avatarColors.length]}">${c.name.charAt(0)}</div>
+          <div>
+            <div class="cand-name">${c.name}</div>
+            <div class="cand-univ">${c.univ}</div>
+          </div>
+        </div>
+        <div class="cand-match-bar">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+            <span style="font-size:13px;font-weight:600;color:var(--gray)">AI moslik</span>
+            <span class="cand-match-num">${c.match}%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${c.match}%"></div></div>
+        </div>
+        <div class="cand-tags">${c.skills.map(s=>`<span class="cand-tag">${s}</span>`).join('')}</div>
+        <div class="cand-stats">
+          <div class="cand-stat-item"><div class="cand-stat-lbl">GPA</div><div class="cand-stat-val">${c.gpa}</div></div>
+          <div class="cand-stat-item"><div class="cand-stat-lbl">Ingliz tili</div><div class="cand-stat-val">${c.lang}</div></div>
+          <div class="cand-stat-item"><div class="cand-stat-lbl">Ish tartibi</div><div class="cand-stat-val">${c.avail}</div></div>
+          <div class="cand-stat-item"><div class="cand-stat-lbl">Joylashuv</div><div class="cand-stat-val">${c.city}</div></div>
+        </div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="showToast('${c.name}ga so\\'rovingiz yuborildi!','success')">So'rov yuborish →</button>
+      </div>`).join('');
+    showToast(`${candidates.length} ta mos talaba topildi!`, "success");
+    document.getElementById('search-results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 1200);
+}
+
+const postedVacs = [
+  { icon: '💻', role: 'Junior Backend Developer', meta: 'Python · Part-time · 4–6 mln so\'m', apps: 14, status: 'Faol' },
+  { icon: '📊', role: 'Data Analyst intern', meta: 'SQL · Flex · 3–4 mln so\'m', apps: 18, status: 'Faol' },
+  { icon: '🎨', role: 'UI/UX Designer (stajior)', meta: 'Figma · Part-time · 2–4 mln so\'m', apps: 9, status: 'Faol' },
+  { icon: '📱', role: 'Mobile Developer', meta: 'Flutter · Full-time · 7–10 mln so\'m', apps: 6, status: 'Yopilgan' },
+];
+
+function loadPostedVacs() {
+  document.getElementById('vac-posted-list').innerHTML = postedVacs.map(v => `
+    <div class="vac-posted-item">
+      <div class="vpi-left">
+        <div class="vpi-icon">${v.icon}</div>
+        <div>
+          <div class="vpi-role">${v.role}</div>
+          <div class="vpi-meta">${v.meta}</div>
+        </div>
+      </div>
+      <div class="vpi-right">
+        <div>
+          <div class="vpi-apps">${v.apps}</div>
+          <div class="vpi-apps-lbl">ariza</div>
+        </div>
+        <span class="badge ${v.status==='Faol'?'badge-accent':'badge-dark'}">${v.status}</span>
+        <button class="btn btn-ghost btn-sm" onclick="showToast('Arizalar ro\\'yxati ochildi','info')">Ko'rish</button>
+      </div>
+    </div>`).join('');
+}
+</script>
+</body>
+</html>
